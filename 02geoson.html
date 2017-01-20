@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>Earthquake Clusters</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
+    <style>
+        #map {
+            position: relative;
+        }
+        #info {
+            position: absolute;
+            height: 1px;
+            width: 1px;
+            z-index: 100;
+        }
+        .tooltip.in {
+            opacity: 1;
+        }
+        .tooltip.top .tooltip-arrow {
+            border-top-color: white;
+        }
+        .tooltip-inner {
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+<div class="map" id="map"></div>
+<script>
+    var vectorone=new ol.layer.Tile({
+        source:new ol.source.OSM()
+    });
+    var Geosonlayer=new ol.layer.Vector({
+        title:'add layer',
+        souce:new ol.source.Vector({
+            projection:'EPSG:4326',
+            url:'http://base.tssit.cn/mapInfo/INDEX_MAP',
+            format:new ol.format.GeoJSON()
+        })
+    });
+    console.log(Geosonlayer,vectorone);
+    var map=new ol.Map({
+        layers:[Geosonlayer],
+        target:'map',
+        controls:ol.control.defaults({
+            attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+                collapsible: true
+            })
+        }),
+        view:new ol.View({
+            center:[52,12],
+            zoom:2
+        })
+    })
+
+</script>
+</body>
+</html>

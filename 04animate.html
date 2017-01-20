@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Data</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v3.20.1/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        #map{
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+    var map = new ol.Map({
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        target: 'map',
+        view: new ol.View({
+            center: [0, 0],
+            zoom: 3
+        })
+    });
+
+    var imageStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 9,
+            snapToPixel: false,
+            fill: new ol.style.Fill({color: 'silver'}),
+            stroke: new ol.style.Stroke({color: 'red', width: 2})
+        })
+    });
+
+    var headInnerImageStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 2,
+            snapToPixel: false,
+            fill: new ol.style.Fill({color: 'blue'})
+        })
+    });
+
+    var headOuterImageStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+            radius: 5,
+            snapToPixel: false,
+            fill: new ol.style.Fill({color: 'black'})
+        })
+    });
+
+    var n = 200;
+    var omegaTheta = 30000; // Rotation period in ms
+    var R = 7e6;
+    var r = 2e6;
+    var p = 2e6;
+    map.on('postcompose', function(event) {
+        var vectorContext = event.vectorContext;
+        var frameState = event.frameState;
+        var theta = 2 * Math.PI * frameState.time / omegaTheta;
+        var coordinates = [];
+        var i;
+        for (i = 0; i < n; ++i) {
+            var t = theta + 2 * Math.PI * i / n;
+            var x = (R + r) * Math.cos(t) + p * Math.cos((R + r) * t / r);
+            var y = (R + r) * Math.sin(t) + p * Math.sin((R + r) * t / r);
+            coordinates.push([x, y]);
+        }
+//        console.log(coordinates);
+        vectorContext.setStyle(imageStyle);
+        vectorContext.drawGeometry(new ol.geom.MultiPoint(coordinates));
+
+        var headPoint = new ol.geom.Point(coordinates[coordinates.length - 1]);
+
+        vectorContext.setStyle(headOuterImageStyle);
+        vectorContext.drawGeometry(headPoint);
+
+        vectorContext.setStyle(headInnerImageStyle);
+        vectorContext.drawGeometry(headPoint);
+
+        map.render();
+    });
+    map.render();
+</script>
+</body>
+</html>
