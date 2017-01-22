@@ -6,11 +6,26 @@
     <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
     <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
     <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
+    <style>
+        html,body{
+            padding: 0;
+            margin: 0;
+        }
+        .scale-line {
+            position: absolute;
+            top: 350px;
+        }
+        .ol-scale-line {
+            position: relative;
+            bottom: 50px;
+            left: 0px;
+        }
+    </style>
 </head>
 <body>
 <div id="map" class="map"></div>
+<div id="scale-line" class="scale-line"></div>
 <script>
-    console.log('1234')
     var url = 'https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/' +
             'Specialty/ESRI_StateCityHighway_USA/MapServer';
 
@@ -19,7 +34,7 @@
             source: new ol.source.OSM()
         }),
         new ol.layer.Tile({
-            extent: [-13884991, 2870341, -7455066, 6338219],
+            extent: [-13884991, 2870341, -10455066, 6338219],
             source: new ol.source.TileArcGISRest({
                 url: url
             })
@@ -28,11 +43,15 @@
     var view=new ol.View({
         center:[-10997148,4569099],
         zoom:4
-    })
+    });
+    var controls=ol.control.defaults().extend([
+        new ol.control.ScaleLine({className: 'ol-scale-line', target: document.getElementById('scale-line')[0]})
+    ]);
     var map = new ol.Map({
         layers: layers,
         target: 'map',
-        view: view
+        view: view,
+        controls: controls
     });
 </script>
 </body>
