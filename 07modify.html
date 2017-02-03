@@ -23,8 +23,8 @@
 <form class="form-inline">
     <label>Geometry type &nbsp;</label>
     <select id="type">
-        <option value="Point">Point</option>
         <option value="LineString">LineString</option>
+        <option value="Point">Point</option>
         <option value="Polygon">Polygon</option>
     </select>
 </form>
@@ -32,13 +32,12 @@
     var raster = new ol.layer.Tile({
         source: new ol.source.OSM()
     });
-
     var map = new ol.Map({
         layers: [raster],
         target: 'map',
         view: new ol.View({
             center: [-11000000, 4600000],
-            zoom: 4
+            zoom: 8
         })
     });
 
@@ -50,13 +49,13 @@
                 color: 'rgba(255, 255, 255, 0.2)'
             }),
             stroke: new ol.style.Stroke({
-                color: '#ffcc33',
+                color: '#ff2a2f',
                 width: 2
             }),
             image: new ol.style.Circle({
                 radius: 7,
                 fill: new ol.style.Fill({
-                    color: '#ffcc33'
+                    color: '#3835ff'
                 })
             })
         })
