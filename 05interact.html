@@ -16,53 +16,27 @@
 <div id="map"></div>
 <script type="text/javascript">
     var map = new ol.Map({
-        interactions: ol.interaction.defaults().extend([
-            new ol.interaction.Select({
-                style: new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 5,
-                        fill: new ol.style.Fill({
-                            color: '#FF0000'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: '#000000'
-                        })
-                    })
-                })
-            })
-        ]),
         target: 'map',
         layers: [
             new ol.layer.Tile({
-                title: 'Global Imagery',
-                source: new ol.source.TileWMS({
-                    url: 'http://demo.opengeo.org/geoserver/wms',
-                    params: {LAYERS: 'nasa:bluemarble', VERSION: '1.1.1'}
-                })
+                source: new ol.source.OSM()
             }),
             new ol.layer.Vector({
-                title: 'Earthquakes',
+                title: 'Buildings',
                 source: new ol.source.Vector({
-                    url: '/data/layers/7day-M2.5.json',
-                    format: new ol.format.GeoJSON()
+                    url: '/data/layers/buildings.kml',
+                    format: new ol.format.KML({
+                        extractStyles: false
+                    })
                 }),
                 style: new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 5,
-                        fill: new ol.style.Fill({
-                            color: '#0000FF'
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: '#000000'
-                        })
-                    })
+                    stroke: new ol.style.Stroke({color: 'red', width: 2})
                 })
             })
         ],
         view: new ol.View({
-            projection: 'EPSG:4326',
-            center: [0, 0],
-            zoom: 1
+            center: ol.proj.fromLonLat([-122.79264450073244, 42.30975194250527]),
+            zoom: 16
         })
     });
 </script>
