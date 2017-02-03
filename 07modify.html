@@ -83,7 +83,7 @@
             features: features,
             type: /** @type {ol.geom.GeometryType} */ (typeSelect.value)
         });
-        console.log(modify)
+        console.log(draw)
         map.addInteraction(draw);
     }
     /**
@@ -93,7 +93,6 @@
         map.removeInteraction(draw);
         addInteraction();
     };
-
     addInteraction();
 </script>
 </body>
