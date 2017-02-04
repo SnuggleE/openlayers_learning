@@ -8,7 +8,7 @@
     <script src="https://openlayers.org/en/v3.20.1/build/ol.js"></script>
     <style>
         #map{
-
+            height: calc(100% - 22px);
         }
         body,html{
             width: 100%;
@@ -29,6 +29,10 @@
     </select>
 </form>
 <script>
+    ol.interaction.Draw.prototype.abortDrawing_=function (res) {
+        console.log('aaa')
+        console.log(res);
+    }
     var raster = new ol.layer.Tile({
         source: new ol.source.OSM()
     });
@@ -93,6 +97,7 @@
         addInteraction();
     };
     addInteraction();
+
 </script>
 </body>
 </html>
