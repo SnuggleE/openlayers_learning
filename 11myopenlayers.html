@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>myopenlayers</title>
+    <link rel="stylesheet" href="./ol.css">
+    <style>
+        html,body{
+            width: 100%;
+            height:100%;
+            margin:0;
+            padding: 0;
+        }
+        #map{
+            width: 100%;
+            height: calc(100% - 30px);
+        }
+        #plots{
+            margin-left: 5px;
+            outline: none;
+            height: 25px;
+        }
+    </style>
+
+</head>
+<body>
+<div id="map"></div>
+<select name="plots" id="plots">
+    <option value="point">point</option>
+    <option value="line">line</option>
+    <option value="lineArrow">直箭头</option>
+    <option value="polygon">多边形</option>
+    <option value="doubleArrow">钳击</option>
+</select>
+<button class="btn-delete"  style="display:none">删除</button>
+<script src="./ol-debug.js"></script>
+<script src="./p-ol3.min.js"></script>
+<script>
+    var featuresCollection=[];
+    var map=new ol.Map({
+        target:'map',
+        layers:[
+            new ol.layer.Tile({
+                source:new ol.source.OSM()
+            })
+        ],
+        view:new ol.View({
+            center:ol.proj.transform([116.404045,39.913729], 'EPSG:4326', 'EPSG:3857'),
+            zoom:12
+        })
+    });
+    var plotDraw=new P.PlotDraw(map);
+    plotDraw.on(P.Event.PlotDrawEvent.DRAW_END,onDrawEnd,false,this);
+
+
+    //initial plot edit tool
+    var plotEdit=new P.PlotEdit(map)
+    var stroke=new ol.style.Stroke({
+        color:'#ff193e',
+        width:2
+    });
+    var fill=new ol.style.Fill({
+        color:'rgba(0,255,0,0.1)'
+    });
+    var image=new ol.style.Circle({
+        fill:fill,
+        stroke:stroke,
+        radius:5
+    });
+    var drawStyle=new ol.style.Style({
+        image:image,
+        fill:fill,
+        stroke:stroke
+    })
+
+
+    //绘制好的标会复好添加到FeatureOverlay
+    var source=new ol.source.Vector()
+    var drawOverlay=new ol.layer.Vector({
+        source:source
+    });
+    drawOverlay.setStyle(drawStyle);
+    drawOverlay.setMap(map);
+
+    //为地图绑定单机事件
+    //如果地图处于绘制状态则开始编辑
+    map.on('click', function(e){
+        if(plotDraw.isDrawing()){
+            return;
+        }
+        var feature = map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+            return feature;
+        });
+        if(feature){
+            // 开始编辑
+            plotEdit.activate(feature);
+            activeDelBtn();
+        }else{
+            // 结束编辑
+            plotEdit.deactivate();
+            deactiveDelBtn();
+        }
+    });
+
+//
+//    var center = ol.proj.transform([116.404045,39.913729], 'EPSG:4326', 'EPSG:3857');
+//    var rightPoint = ol.proj.transform([116.382809,39.934894], 'EPSG:4326', 'EPSG:3857');
+//    var leftPoint = ol.proj.transform([116.419029,39.936], 'EPSG:4326', 'EPSG:3857');
+//    var sector = new P.PlotFactory.createPlot(P.PlotTypes.SECTOR, [center, leftPoint,rightPoint]);
+//    var feature = new ol.Feature({
+//        geometry: sector
+//    });
+//    drawOverlay.getSource().addFeature(feature);
+
+    document.getElementById('plots').onchange=function(e){
+        switch (e.target.value){
+            case 'point':{
+                activate(P.PlotTypes.MARKER);
+                break;
+            }
+            case 'line':{
+                activate(P.PlotTypes.POLYLINE);
+                break;
+            }
+            case 'polygon':{
+                activate(P.PlotTypes.POLYGON);
+                break;
+            }
+            case 'doubleArrow':{
+                activate(P.PlotTypes.DOUBLE_ARROW);
+                break;
+            }
+            case 'lineArrow':{
+                activate(P.PlotTypes.STRAIGHT_ARROW);
+                break;
+            }
+        }
+    }
+    function activate(type){
+        plotEdit.deactivate();
+        plotDraw.activate(type);
+    }
+    function onDrawEnd(event){
+        var feature = event.feature;
+        drawOverlay.getSource().addFeature(feature);
+        // 开始编辑
+        plotEdit.activate(feature);
+        activeDelBtn();
+        savePlots();
+
+        
+    }
+    document.getElementsByClassName('btn-delete')[0].onclick = function(){
+        if(drawOverlay && plotEdit && plotEdit.activePlot){
+            drawOverlay.getSource().removeFeature(plotEdit.activePlot);
+            plotEdit.deactivate();
+            deactiveDelBtn();
+
+        }
+    };
+
+    function activeDelBtn(){
+        document.getElementsByClassName('btn-delete')[0].style.display = 'inline-block';
+    }
+
+    function deactiveDelBtn(){
+        document.getElementsByClassName('btn-delete')[0].style.display = 'none';
+    }
+    //存储图形控制点和类型信息。
+    function savePlots() {
+        featuresCollection=[];
+        var features = source.getFeatures();
+        if (features != null && features.length > 0) {
+            for (var x in features) {
+                var geom = features[x].getGeometry();//Geometry
+                featuresCollection.push({type:geom.type,points:geom.points})
+            }
+        }
+        localStorage.setItem('plots',JSON.stringify(featuresCollection))
+        console.log(featuresCollection);
+    }
+    //获取本地存储  并绘制图形
+    (function () {
+        var plots=JSON.parse(localStorage.getItem("plots"));
+        console.log(plots);
+        plots.forEach(function (plot) {
+            var feature = new ol.Feature({
+                geometry: new P.PlotFactory.createPlot(plot.type, plot.points)
+            });
+            drawOverlay.getSource().addFeature(feature);
+        })
+    })();
+    window.onunload=function (e) {
+        e.preventDefault();
+        savePlots();
+    }
+</script>
+</body>
+</html>

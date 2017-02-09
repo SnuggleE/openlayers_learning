@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>form</title>
+</head>
+<body>
+<form id="fileupload" method="post" enctype="multipart/form-data">
+    <input type="file">
+    <button id="btn">上传</button>
+</form>
+<script>
+    var form=document.getElementById('fileupload');
+    var formData=new FormData(form);
+    console.log(formData.files)
+    formData.append('file',)
+//    formData.append('file', $("#subtitle-file")[0].files[0]);
+//    jsonData.append('name', $("#subtitle-file").val());
+    btn.onclick=function (e) {
+        e.preventDefault();
+        console.log(formData)
+    }
+</script>
+</body>
+</html>

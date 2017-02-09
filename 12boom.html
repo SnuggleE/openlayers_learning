@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #boom{
+            background: transparent;
+        }
+        body{
+            background: #d0f7f9;
+        }
+    </style>
+</head>
+<body>
+<canvas id="boom" width="500" height="500"></canvas>
+<audio src="http://dx.sc.chinaz.com/Files/DownLoad/sound1/201412/5298.mp3" autoplay loop></audio>
+<script>
+    var ctx=document.getElementById('boom').getContext('2d');
+    ctx.fillStyle="rgba(33,222,80,0.1)";
+    ctx.strokeStyle="#1518d6";
+    ctx.lineWidth=5;
+    ctx.beginPath();
+    ctx.moveTo(50,50);
+    ctx.lineTo(250,200);
+    ctx.lineTo(60,200);
+    ctx.lineTo(30,20);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill()
+</script>
+</body>
+</html>
