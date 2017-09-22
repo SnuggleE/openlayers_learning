@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            position: relative;
+        }
+        #d3{
+            width: 300px;
+            height: 500px;
+            border: 1px solid #000000;
+        }
+        #d4{
+            width: 200px;
+            height: 280px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div id="d3"></div>
+<div id="d4" style="display: none;">
+    <ul>
+        <li>添加</li>
+        <li>删除</li>
+        <li>选择</li>
+    </ul>
+</div>
+
+<script>
+  window.onload=function () {
+    document.oncontextmenu = function(e){
+      e.preventDefault();
+    };
+    document.body.onmousedown=function(e){
+//      e.prevenDefault();
+      var d4=document.getElementById("d4");
+      console.log(e.offsetY);
+      d4.style.left=e.offsetX;
+      d4.style.top=e.offsetY;
+      d4.style.display='block';
+
+      console.log(e);
+    }
+  }
+</script>
+</body>
+</html>

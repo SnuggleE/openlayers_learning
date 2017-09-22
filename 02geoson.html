@@ -37,13 +37,13 @@
         title:'add layer',
         souce:new ol.source.Vector({
             projection:'EPSG:4326',
-            url:'http://base.tssit.cn/mapInfo/INDEX_MAP',
+            url:'http://map.tssit.cn/services/tianjin/tianjin_test/MapServer/0',
             format:new ol.format.GeoJSON()
         })
     });
     console.log(Geosonlayer,vectorone);
     var map=new ol.Map({
-        layers:[Geosonlayer],
+        layers:[vectorone,Geosonlayer],
         target:'map',
         controls:ol.control.defaults({
             attributionOptions: /** @type {olx.control.AttributionOptions} */ ({

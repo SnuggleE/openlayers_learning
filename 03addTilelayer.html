@@ -26,18 +26,11 @@
 <div id="map" class="map"></div>
 <div id="scale-line" class="scale-line"></div>
 <script>
-    var url = 'https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/' +
-            'Specialty/ESRI_StateCityHighway_USA/MapServer';
-
+    var url = 'http://map.tssit.cn/services/tianjin/tianjin_test/MapServer/0';
     var layers = [
-        new ol.layer.Tile({
-            source: new ol.source.OSM()
-        }),
-        new ol.layer.Tile({
-            extent: [-13884991, 2870341, -10455066, 6338219],
-            source: new ol.source.TileArcGISRest({
-                url: url
-            })
+
+        new ol.layer.Vector({
+          url:url
         })
     ];
     var view=new ol.View({

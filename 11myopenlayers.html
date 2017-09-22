@@ -31,6 +31,7 @@
     <option value="lineArrow">直箭头</option>
     <option value="polygon">多边形</option>
     <option value="doubleArrow">钳击</option>
+    <option value="sector">扇形</option>
 </select>
 <button class="btn-delete"  style="display:none">删除</button>
 <script src="./ol-debug.js"></script>
@@ -134,6 +135,10 @@
                 activate(P.PlotTypes.STRAIGHT_ARROW);
                 break;
             }
+            case 'sector':{
+                activate(P.PlotTypes.SECTOR);
+                break;
+            }
         }
     }
     function activate(type){
@@ -172,7 +177,9 @@
         var features = source.getFeatures();
         if (features != null && features.length > 0) {
             for (var x in features) {
+
                 var geom = features[x].getGeometry();//Geometry
+                console.log(geom.getClosestPoint());
                 featuresCollection.push({type:geom.type,points:geom.points})
             }
         }

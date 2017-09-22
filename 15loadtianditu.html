@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tiled WMS</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.1.1/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="./ol-debug.js"></script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script>
+var url='http://gisserver.tianditu.com/TDTService/agriculture/2014/wms';
+var tiantuLayer=new ol.layer.Image({
+  source:ol.source.ImageWMS({
+    url:url,
+    params:{'LAYERS':'060301,060302'},
+    serverType:'geoserver'
+  })
+})
+  var map = new ol.Map({
+    layers: [tiantuLayer],
+    target: 'map',
+//    view: new ol.View({
+//      center: [-10997148, 4569099],
+//      zoom: 4
+//    })
+  });
+</script>
+</body>
+</html>
