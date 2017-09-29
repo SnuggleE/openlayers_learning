@@ -5,18 +5,34 @@
     <title>Title</title>
     <style>
         #canvas{
-            border: 1px solid #000;
+            border: 6px solid #000;
+        }
+        html,body{
+            margin:0;
+            padding: 0;
         }
     </style>
 </head>
 <body>
-<canvas id="canvas" border="1" width="500" height="500">不支持canvas</canvas>
+<canvas id="canvas" border="50" width="500" height="500">不支持canvas</canvas>
+<button id="btn">full screen</button>
 <script>
     var canvas=document.getElementById('canvas');
     var gl=canvas.getContext('2d');
     gl.lineWidth=20;
     gl.rect(100,200,200,50);
-    gl.stroke()
+    gl.fill();
+    document.body.onkeydown=function (event) {
+      console.log(event)
+    }
+    var btn=document.getElementById('btn');
+    btn.onclick=function (e) {
+      document.documentElement.webkitRequestFullScreen()
+    }
+    setTimeout(function () {
+      console.log('aaa')
+      document.documentElement.webkitRequestFullScreen()
+    },3000)
 </script>
 </body>
 </html>
